@@ -1,0 +1,18 @@
+pipeline {
+    agent any
+    environment {
+        MVN_GOALS = 'clean install -DskipTests'
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/S-Sharma007/Ultranav-architecture-repo.git' 
+            }
+        }
+        stage('Build') {
+            steps {
+                sh "mvn ${MVN_GOALS}"
+            }
+        }
+    }
+}
