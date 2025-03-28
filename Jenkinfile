@@ -2,17 +2,70 @@ pipeline {
     agent any
     environment {
         MVN_GOALS = 'clean install -DskipTests'
+        SONAR_PROJECT_KEY = 'S-Sharma007_Ultranav-architecture-repo' 
+        SONAR_ORGANIZATION = 'sharmatech-key' 
+        JFROG_MAVEN_REPO = 'mave-repo-libs-release' 
+        JFROG_DOCKER_REPO = 'jfrog-docker-repo' 
+        DOCKER_IMAGE_NAME = "spring-petclinic"
     }
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/S-Sharma007/Ultranav-architecture-repo.git' 
+                git 'https://github.com/S-Sharma007/Ultranav-architecture-repo.git'
+            }
+        }
+        stage('SonarCloud Scan') {
+            steps {
+                withSonarQubeEnv('SonarCloud') { 
+                    sh "mvn clean verify sonar:sonar -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.organization=${SONAR_ORGANIZATION}"
+                }
             }
         }
         stage('Build') {
             steps {
                 sh "mvn ${MVN_GOALS}"
             }
+        }
+        stage('Tag Artifacts') {
+            steps {
+                script {
+                    if (env.BRANCH_NAME == 'main') {
+                        env.ARTIFACT_TAG = 'latest'
+                    } else if (env.BRANCH_NAME.startsWith('feature/')) {
+                        env.ARTIFACT_TAG = "feature-${env.BRANCH_NAME.substring(8)}"
+                    } else {
+                        env.ARTIFACT_TAG = "build-${BUILD_NUMBER}"
+                    }
+                }
+            }
+        }
+        stage('Deploy to Artifactory') {
+            steps {
+                script {
+                    def server = MyArtifactory.server 'Artifactory' 
+                    def pom = readMavenPom file: 'pom.xml'
+                    server.upload(
+                        [
+                            serverId: 'artifactory',
+                            specFile: "artifactory-maven-upload.json"
+                        ]
+                    )
+                    if (env.ARTIFACT_TAG == 'latest') {
+                        echo "Deploying Docker Image"
+                        sh "docker login -u ${JFROG_USERNAME} -p ${JFROG_PASSWORD} ${JFROG_DOCKER_REPO}"
+                        sh "docker build -t ${JFROG_DOCKER_REPO}/${DOCKER_IMAGE_NAME}:${env.ARTIFACT_TAG} ."
+                        sh "docker push ${JFROG_DOCKER_REPO}/${DOCKER_IMAGE_NAME}:${env.ARTIFACT_TAG}"
+                    }
+                }
+            }
+        }
+    }
+    post {
+        failure {
+            echo 'Pipeline failed'
+        }
+        success {
+            echo 'Pipeline succeeded'
         }
     }
 }
