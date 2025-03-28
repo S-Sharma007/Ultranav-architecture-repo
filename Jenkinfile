@@ -11,7 +11,8 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/S-Sharma007/Ultranav-architecture-repo.git'
+               // git 'https://github.com/S-Sharma007/Ultranav-architecture-repo.git'
+                echo "Code already checked out in initial pipeline checkout."
             }
         }
         stage('SonarCloud Scan') {
