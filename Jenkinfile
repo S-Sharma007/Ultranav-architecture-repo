@@ -6,7 +6,7 @@ pipeline {
     agent any 
     tools {
         maven 'Maven'
-        jdk 'JDK 17' 
+        Jjdk 'JDK 17' 
     }
     environment {
         APP_NAME = 'spring-petclinic'
@@ -51,11 +51,10 @@ pipeline {
             steps {
                 def server = MyArtifactory.server 'Artifactory' 
                 def pom = readMavenPom file: 'pom.xml'
-                        serverId: 'artifactory',
-                    [
-                        serverId: 'artifactory',
-                        specFile: "artifactory-maven-upload.json"
-                    ]
+                         server.upload([
+                serverId: 'Artifactory',
+                specFile: "artifactory-maven-upload.json"
+            ])
                 if (env.ARTIFACT_TAG == 'latest') {
                     echo "Deploying Docker Image"
                     sh "docker login -u ${JFROG_USERNAME} -p ${JFROG_PASSWORD} ${JFROG_DOCKER_REPO}"
