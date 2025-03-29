@@ -1,62 +1,78 @@
-// This Jenkinsfile is used to build, test, and deploy the Spring Petclinic application using Maven and Docker.
-
-@Library('artifactory') _
-
-pipeline {
+ pipeline {
     agent any
+    
     tools {
-        maven 'Maven'
-        jdk 'JDK 17'
+        maven 'Maven' 
+        jdk 'JDK 17'   
     }
+    
     environment {
         APP_NAME = 'spring-petclinic'
+        ARTIFACTORY_URL = 'https://your-artifactory-instance.jfrog.io/artifactory'
+        ARTIFACTORY_REPO = 'maven-repo-libs-release'  
         SONAR_PROJECT_KEY = 'S-Sharma007_Ultranav-architecture-repo'
         SONAR_ORGANIZATION = 'sharmatech-key'
-        JFROG_MAVEN_REPO = 'maven-repo-libs-release'
-        JFROG_DOCKER_REPO = 'jfrog-docker-repo'
-        DOCKER_IMAGE_NAME = "spring-petclinic"
-        MVN_GOALS = 'clean install'
-
+        DOCKER_PORT = '8081'
     }
+    
     stages {
-        stage('SonarCloud Scan') {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', 
+                url: 'https://github.com/S-Sharma007/Ultranav-architecture-repo.git',
+                credentialsId: 'github_creds'  
+            }
+        }
+        
+        stage('Build with Maven') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+        
+        stage('SonarCloud Analysis') {
             steps {
                 withSonarQubeEnv('SonarCloud') {
-                    withMaven(mavenLocalRepo: '.repository') {
-                        sh "mvn verify sonar:sonar -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.organization=${SONAR_ORGANIZATION}"
-                    }
+                    sh """
+                    mvn sonar:sonar \
+                    -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
+                    -Dsonar.organization=${SONAR_ORGANIZATION}
+                    """
                 }
             }
         }
-        stage('Build') {
-            steps {
-                withMaven(mavenLocalRepo: '.repository') {
-                    sh "mvn ${MVN_GOALS}" // Executes Maven goals defined in the environment
-                }
-            }
-        }
-        stage('Tag Artifacts') {
-            steps {
-                if (env.BRANCH_NAME == 'main') {
-                    env.ARTIFACT_TAG = 'latest'
-                }
-            }
-        }
+        
         stage('Deploy to Artifactory') {
             steps {
+                rtUpload (
+                    serverId: 'Artifactory',  
+                    spec: """{
+                        "files": [{
+                            "pattern": "target/*.jar",
+                            "target": "${ARTIFACTORY_REPO}/${APP_NAME}/"
+                        }]
+                    }"""
+                )
+            }
+        }
+        
+        stage('Docker Build & Deploy') {
+            steps {
                 script {
-                    def server = MyArtifactory.server 'Artifactory'
-                    def pom = readMavenPom file: 'pom.xml'
-                    server.upload([
-                        serverId: 'Artifactory',
-                        specFile: "artifactory-maven-upload.json"
-                    ])
-                    if (env.ARTIFACT_TAG == 'latest') {
-                        echo "Deploying Docker Image"
-                        sh "docker login -u ${JFROG_USERNAME} -p ${JFROG_PASSWORD} ${JFROG_DOCKER_REPO}"
-                        sh "docker build --cache-from=${JFROG_DOCKER_REPO}/${DOCKER_IMAGE_NAME}:latest -t ${JFROG_DOCKER_REPO}/${DOCKER_IMAGE_NAME}:${env.ARTIFACT_TAG} ."
-                        sh "docker push ${JFROG_DOCKER_REPO}/${DOCKER_IMAGE_NAME}:${env.ARTIFACT_TAG}"
-                    }
+                   
+                    docker.build("${APP_NAME}:latest") 
+                    
+                    
+                    sh "docker stop ${APP_NAME} || true"
+                    sh "docker rm ${APP_NAME} || true"
+                    
+                    
+                    sh """
+                    docker run -d \
+                        -p ${DOCKER_PORT}:8080 \
+                        --name ${APP_NAME} \
+                        ${APP_NAME}:latest
+                    """
                 }
             }
         }
