@@ -47,9 +47,9 @@ pipeline {
                 }
             }
         }
-    stage ('Deploy to artifactory') {
+    stage ('Deploy to Artifactory') {
             steps {
-                def server = MyArtifactory.server 'artifactory' 
+                def server = MyArtifactory.server 'Artifactory' 
                 def pom = readMavenPom file: 'pom.xml'
                         serverId: 'artifactory',
                     [
