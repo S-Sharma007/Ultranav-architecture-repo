@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    tools {
+        maven 'Maven' 
+    }
     environment {
         MVN_GOALS = 'clean install -DskipTests'
         SONAR_PROJECT_KEY = 'S-Sharma007_Ultranav-architecture-repo' 
@@ -9,22 +12,20 @@ pipeline {
         DOCKER_IMAGE_NAME = "spring-petclinic"
     }
     stages {
-        stage('Checkout') {
-            steps {
-               // git 'https://github.com/S-Sharma007/Ultranav-architecture-repo.git'
-                echo "Code already checked out in initial pipeline checkout."
-            }
-        }
         stage('SonarCloud Scan') {
             steps {
-                withSonarQubeEnv('SonarCloud') { 
-                    sh "mvn clean verify sonar:sonar -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.organization=${SONAR_ORGANIZATION}"
+                withSonarQubeEnv('SonarCloud') {
+                    withMaven(mavenLocalRepo: '.repository') {
+                        sh "mvn verify sonar:sonar -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.organization=${SONAR_ORGANIZATION}"
+                    }
                 }
             }
         }
         stage('Build') {
             steps {
-                sh "mvn ${MVN_GOALS}"
+                withMaven(mavenLocalRepo: '.repository') {
+                    sh "mvn ${MVN_GOALS}"
+                }
             }
         }
         stage('Tag Artifacts') {
