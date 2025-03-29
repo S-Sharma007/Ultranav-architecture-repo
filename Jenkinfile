@@ -6,7 +6,7 @@ pipeline {
     agent any 
     tools {
         maven 'Maven'
-        JDK 'JDK 17' 
+        jdk 'JDK 17' 
     }
     environment {
         APP_NAME = 'spring-petclinic'
