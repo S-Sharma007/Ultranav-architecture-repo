@@ -3,24 +3,23 @@
 @Library('artifactory') _
 
 pipeline {
-    agent any 
+    agent any
     tools {
         maven 'Maven'
-        Jjdk 'JDK 17' 
+        jdk 'JDK 17'
     }
     environment {
         APP_NAME = 'spring-petclinic'
         SONAR_PROJECT_KEY = 'S-Sharma007_Ultranav-architecture-repo'
-        SONAR_ORGANIZATION = 'sharmatech-key' 
-        JFROG_MAVEN_REPO = 'maven-repo-libs-release' 
-        JFROG_DOCKER_REPO = 'jfrog-docker-repo' 
+        SONAR_ORGANIZATION = 'sharmatech-key'
+        JFROG_MAVEN_REPO = 'maven-repo-libs-release'
+        JFROG_DOCKER_REPO = 'jfrog-docker-repo'
         DOCKER_IMAGE_NAME = "spring-petclinic"
         MVN_GOALS = 'clean install'
 
     }
     stages {
-         stage ('SonarCloud Scan') {
-         stage ('SonarCloud Scan') {
+        stage('SonarCloud Scan') {
             steps {
                 withSonarQubeEnv('SonarCloud') {
                     withMaven(mavenLocalRepo: '.repository') {
@@ -29,40 +28,37 @@ pipeline {
                 }
             }
         }
-
-    stages {
+        stage('Build') {
             steps {
                 withMaven(mavenLocalRepo: '.repository') {
                     sh "mvn ${MVN_GOALS}" // Executes Maven goals defined in the environment
                 }
             }
         }
-        stage ('Tag Artifacts') {
+        stage('Tag Artifacts') {
             steps {
-                     if (env.BRANCH_NAME == 'main') {
-                        env.ARTIFACT_TAG = 'latest'
-                    }
-                    } 
+                if (env.BRANCH_NAME == 'main') {
+                    env.ARTIFACT_TAG = 'latest'
+                }
+            }
+        }
+        stage('Deploy to Artifactory') {
+            steps {
+                script {
+                    def server = MyArtifactory.server 'Artifactory'
+                    def pom = readMavenPom file: 'pom.xml'
+                    server.upload([
+                        serverId: 'Artifactory',
+                        specFile: "artifactory-maven-upload.json"
+                    ])
+                    if (env.ARTIFACT_TAG == 'latest') {
+                        echo "Deploying Docker Image"
+                        sh "docker login -u ${JFROG_USERNAME} -p ${JFROG_PASSWORD} ${JFROG_DOCKER_REPO}"
+                        sh "docker build --cache-from=${JFROG_DOCKER_REPO}/${DOCKER_IMAGE_NAME}:latest -t ${JFROG_DOCKER_REPO}/${DOCKER_IMAGE_NAME}:${env.ARTIFACT_TAG} ."
+                        sh "docker push ${JFROG_DOCKER_REPO}/${DOCKER_IMAGE_NAME}:${env.ARTIFACT_TAG}"
                     }
                 }
             }
         }
-    stage ('Deploy to Artifactory') {
-            steps {
-                def server = MyArtifactory.server 'Artifactory' 
-                def pom = readMavenPom file: 'pom.xml'
-                         server.upload([
-                serverId: 'Artifactory',
-                specFile: "artifactory-maven-upload.json"
-            ])
-                if (env.ARTIFACT_TAG == 'latest') {
-                    echo "Deploying Docker Image"
-                    sh "docker login -u ${JFROG_USERNAME} -p ${JFROG_PASSWORD} ${JFROG_DOCKER_REPO}"
-                    sh "docker build --cache-from=${JFROG_DOCKER_REPO}/${DOCKER_IMAGE_NAME}:latest -t ${JFROG_DOCKER_REPO}/${DOCKER_IMAGE_NAME}:${env.ARTIFACT_TAG} ."
-                    sh "docker push ${JFROG_DOCKER_REPO}/${DOCKER_IMAGE_NAME}:${env.ARTIFACT_TAG}"
-                }
-            }
-          }        
-        }
-     }
- }
+    }
+}
