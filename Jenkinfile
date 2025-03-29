@@ -1,18 +1,23 @@
+// This Jenkinsfile is used to build, test, and deploy the Spring Petclinic application using Maven and Docker.
+
 pipeline {
-    agent any
+    agent any 
     tools {
-        maven 'Maven' 
+        Maven 'Maven'
+        JDK 'JDK 17' 
     }
     environment {
-        MVN_GOALS = 'clean install -DskipTests'
+        APP_NAME = 'spring-petclinic'
+        SONAR_PROJECT_KEY = 'S-Sharma007_Ultranav-architecture-repo'
         SONAR_PROJECT_KEY = 'S-Sharma007_Ultranav-architecture-repo' 
         SONAR_ORGANIZATION = 'sharmatech-key' 
         JFROG_MAVEN_REPO = 'mave-repo-libs-release' 
         JFROG_DOCKER_REPO = 'jfrog-docker-repo' 
         DOCKER_IMAGE_NAME = "spring-petclinic"
+
     }
     stages {
-        stage('SonarCloud Scan') {
+         stage ('SonarCloud Scan') {
             steps {
                 withSonarQubeEnv('SonarCloud') {
                     withMaven(mavenLocalRepo: '.repository') {
@@ -20,28 +25,26 @@ pipeline {
                     }
                 }
             }
-        }
-        stage('Build') {
+
+    stages {
+        stage ('Build') {
             steps {
                 withMaven(mavenLocalRepo: '.repository') {
                     sh "mvn ${MVN_GOALS}"
                 }
             }
         }
-        stage('Tag Artifacts') {
+        stage ('Tag Artifacts') {
             steps {
                 script {
-                    if (env.BRANCH_NAME == 'main') {
+                     (env.BRANCH_NAME == 'main') {
                         env.ARTIFACT_TAG = 'latest'
-                    } else if (env.BRANCH_NAME.startsWith('feature/')) {
-                        env.ARTIFACT_TAG = "feature-${env.BRANCH_NAME.substring(8)}"
-                    } else {
-                        env.ARTIFACT_TAG = "build-${BUILD_NUMBER}"
+                    } 
                     }
                 }
             }
         }
-        stage('Deploy to Artifactory') {
+    stage ('Deploy to Artifactory') {
             steps {
                 script {
                     def server = MyArtifactory.server 'Artifactory' 
@@ -60,14 +63,7 @@ pipeline {
                     }
                 }
             }
+          }        
         }
-    }
-    post {
-        failure {
-            echo 'Pipeline failed'
-        }
-        success {
-            echo 'Pipeline succeeded'
-        }
-    }
-}
+     }
+ }
