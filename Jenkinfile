@@ -8,7 +8,7 @@
     
     environment {
         Sonar_Token = credentials('SONAR_TOKEN')
-        jenkinsjfrog-cred = credentials('jenkinsjfrog-cred')
+        
 
     }
     
