@@ -2,17 +2,14 @@
     agent any
     
     tools {
-        maven 'Maven' 
-        jdk 'JDK 17'   
+        maven 'maven 3.9.9' 
+        jdk 'jdk 17'   
     }
     
     environment {
-        APP_NAME = 'spring-petclinic'
-        ARTIFACTORY_URL = 'https://your-artifactory-instance.jfrog.io/artifactory'
-        ARTIFACTORY_REPO = 'maven-repo-libs-release'  
-        SONAR_PROJECT_KEY = 'S-Sharma007_Ultranav-architecture-repo'
-        SONAR_ORGANIZATION = 'sharmatech-key'
-        DOCKER_PORT = '8081'
+        Sonar_Token = credentials('SONAR_TOKEN')
+        jenkinsjfrog-cred = credentials('jenkinsjfrog-cred')
+
     }
     
     stages {
@@ -24,57 +21,12 @@
             }
         }
         
-        stage('Build with Maven') {
+        stage('Petclinic Build with Maven') {
             steps {
-                sh 'mvn clean package'
-            }
-        }
-        
-        stage('SonarCloud Analysis') {
-            steps {
-                withSonarQubeEnv('SonarCloud') {
-                    sh """
-                    mvn sonar:sonar \
-                    -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
-                    -Dsonar.organization=${SONAR_ORGANIZATION}
-                    """
-                }
-            }
-        }
-        
-        stage('Deploy to Artifactory') {
-            steps {
-                rtUpload (
-                    serverId: 'Artifactory',  
-                    spec: """{
-                        "files": [{
-                            "pattern": "target/*.jar",
-                            "target": "${ARTIFACTORY_REPO}/${APP_NAME}/"
-                        }]
-                    }"""
-                )
-            }
-        }
-        
-        stage('Docker Build & Deploy') {
-            steps {
-                script {
-                   
-                    docker.build("${APP_NAME}:latest") 
-                    
-                    
-                    sh "docker stop ${APP_NAME} || true"
-                    sh "docker rm ${APP_NAME} || true"
-                    
-                    
-                    sh """
-                    docker run -d \
-                        -p ${DOCKER_PORT}:8080 \
-                        --name ${APP_NAME} \
-                        ${APP_NAME}:latest
-                    """
-                }
+                sh 'mvn clean package -DskipTests=true'
+                sh 'mvn compile'
+                sh 'mvn package'
             }
         }
     }
-}
+ }
