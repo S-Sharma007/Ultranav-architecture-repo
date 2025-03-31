@@ -12,43 +12,28 @@
   </parent>
   <name>petclinic</name>
 
- <!-- filepath: c:\DevOps Projects\Sanjeev & Saurabh Projects\Ultranav-architecture-repo\spring-petclinic\pom.xml -->
-<properties>
-  <!-- Generic properties -->
-  <java.version>17</java.version>
-  <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-  <!-- Important for reproducible builds. Update using e.g. ./mvnw versions:set -DnewVersion=... -->
-  <project.build.outputTimestamp>2023-05-10T07:42:50Z</project.build.outputTimestamp>
+  <properties>
 
-  <!-- Web dependencies -->
-  <webjars-bootstrap.version>5.2.3</webjars-bootstrap.version>
-  <webjars-font-awesome.version>4.7.0</webjars-font-awesome.version>
+    <!-- Generic properties -->
+    <java.version>17</java.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <!-- Important for reproducible builds. Update using e.g. ./mvnw versions:set -DnewVersion=... -->
+    <project.build.outputTimestamp>2023-05-10T07:42:50Z</project.build.outputTimestamp>
 
-  <checkstyle.version>10.11.0</checkstyle.version>
-  <jacoco.version>0.8.10</jacoco.version>
-  <libsass.version>0.2.29</libsass.version>
-  <lifecycle-mapping>1.0.0</lifecycle-mapping>
-  <maven-checkstyle.version>3.2.2</maven-checkstyle.version>
-  <nohttp-checkstyle.version>0.0.11</nohttp-checkstyle.version>
-  <spring-format.version>0.0.39</spring-format.version>
+    <!-- Web dependencies -->
+    <webjars-bootstrap.version>5.2.3</webjars-bootstrap.version>
+    <webjars-font-awesome.version>4.7.0</webjars-font-awesome.version>
 
-  <!-- SonarCloud properties -->
-  <sonar.organization>sharmatech-key</sonar.organization>
-  <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+    <checkstyle.version>10.11.0</checkstyle.version>
+    <jacoco.version>0.8.10</jacoco.version>
+    <libsass.version>0.2.29</libsass.version>
+    <lifecycle-mapping>1.0.0</lifecycle-mapping>
+    <maven-checkstyle.version>3.2.2</maven-checkstyle.version>
+    <nohttp-checkstyle.version>0.0.11</nohttp-checkstyle.version>
+    <spring-format.version>0.0.39</spring-format.version>
 
-
-
-  <!-- ... other properties ... -->
-  <sonar.exclusions>
-    **/generated/**/*,
-    **/src/test/**/*,
-    **/src/main/resources/static/resources/**/*,
-    **/docs/**/*
-  </sonar.exclusions>
-</properties>  
-    
-  
+  </properties>
 
   <dependencies>
     <!-- Spring and Spring Boot dependencies -->
@@ -301,7 +286,7 @@
     </license>
   </licenses>
 
-  <!--<repositories>
+  <repositories>
     <repository>
       <id>spring-snapshots</id>
       <name>Spring Snapshots</name>
@@ -337,7 +322,7 @@
         <enabled>false</enabled>
       </snapshots>
     </pluginRepository>
-  </pluginRepositories> -->
+  </pluginRepositories>
 
   <profiles>
     <profile>
