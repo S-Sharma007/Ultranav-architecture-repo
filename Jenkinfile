@@ -9,10 +9,8 @@ pipeline {
     environment {
         Sonar_Token = credentials('SONAR_TOKEN')
         Artifacts = credentials('jfrog-jenkinsuser_creds')
-        ARTIFACTORY_REPO = 'buildp1-libs-release-local' 
-
-        
-
+        ARTIFACTORY_REPO = 'buildp1-libs-release-local' // Artifactory repository
+        APP_NAME = 'spring-petclinic' // Define the application name
     }
     
     stages {
@@ -27,11 +25,10 @@ pipeline {
         stage('Petclinic Build with Maven') {
             steps {
                 sh 'mvn clean package -DskipTests=true -X' // Build only
-                
             }
         }
 
-        stage ('pushing to build to Jfrog artifactory') {
+        stage('Pushing Build to JFrog Artifactory') {
             steps {
                 rtUpload (
                     serverId: 'Artifactory',  // Configured in Jenkins - MUST MATCH SERVER ID
@@ -40,7 +37,7 @@ pipeline {
                           "files": [
                             {
                               "pattern": "target/*.jar",
-                              "target": "${ARTIFACTORY_REPO}/${petclinic}/" // Use the environment variable
+                              "target": "${ARTIFACTORY_REPO}/${APP_NAME}/" // Use the defined environment variable
                             }
                           ]
                         }
@@ -49,7 +46,7 @@ pipeline {
             }
         }
 
-        stage ( 'build a docker image ') {
+        stage('Build a Docker Image') {
             steps {
                 script {
                     sh "docker build -t petclinic ."
@@ -58,7 +55,7 @@ pipeline {
             }
         }
         
-        stage ('Push docker image to ECR'){
+        stage('Push Docker Image to ECR') {
             steps {
                 script { 
                     sh "docker push 194722422083.dkr.ecr.ap-southeast-2.amazonaws.com/petclinic:latest"
@@ -66,4 +63,4 @@ pipeline {
             }
         }
     }
- }
+}
