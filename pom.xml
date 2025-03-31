@@ -279,12 +279,18 @@
     </plugins>
   </build>
 
-  <licenses>
-    <license>
-      <name>Apache License, Version 2.0</name>
-      <url>https://www.apache.org/licenses/LICENSE-2.0</url>
-    </license>
-  </licenses>
+  <distributionManagement>
+    <repository>
+      <id>central</id>
+      <name>a0fg4tua327wg-artifactory-primary-0-releases</name>
+      <url>https://trialmhx67v.jfrog.io/artifactory/buildp1-libs-release-local</url>
+    </repository>
+    <snapshotRepository>
+      <id>snapshots</id>
+      <name>a0fg4tua327wg-artifactory-primary-0-snapshots</name>
+      <url>https://trialmhx67v.jfrog.io/artifactory/buildp1-libs-snapshot-local</url>
+    </snapshotRepository>
+  </distributionManagement>
 
   <repositories>
     <repository>
