@@ -9,6 +9,7 @@ pipeline {
     environment {
         Sonar_Token = credentials('SONAR_TOKEN')
         Artifacts = credentials('jfrog-jenkinsuser_creds')
+        ARTIFACTORY_REPO = 'buildp1-libs-release-local' 
 
         
 
@@ -39,7 +40,7 @@ pipeline {
                           "files": [
                             {
                               "pattern": "target/*.jar",
-                              "target": "${buildp1-libs-release-local}/${petclinic}/"
+                              "target": "${ARTIFACTORY_REPO}/${petclinic}/" // Use the environment variable
                             }
                           ]
                         }
