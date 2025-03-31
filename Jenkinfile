@@ -9,7 +9,7 @@ pipeline {
     environment {
         Sonar_Token = credentials('SONAR_TOKEN')
         Artifacts = credentials('jfrog-jenkinsuser_creds')
-        ARTIFACTORY_REPO = 'buildp1-libs-release-local' // Artifactory repository
+        ARTIFACTORY_REPO = 'petclinicbuild/' // Artifactory repository
         APP_NAME = 'spring-petclinic' // Define the application name
     }
     
@@ -31,11 +31,12 @@ pipeline {
         stage('Pushing Build to JFrog Artifactory') {
             steps {
                 rtUpload (
-                    serverId: 'Artifactory',  // Configured in Jenkins - MUST MATCH SERVER ID
+                    serverId: 'Artifactory',  
                     spec: """
                         {
                           "files": [
                             {
+                              "File URL": "https://trisha.jfrog.io/artifactory/petclinicbuild/"
                               "pattern": "target/*.jar",
                               "target": "${ARTIFACTORY_REPO}/${APP_NAME}/" // Use the defined environment variable
                             }
