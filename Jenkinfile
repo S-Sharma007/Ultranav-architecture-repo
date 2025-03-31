@@ -39,7 +39,7 @@ pipeline {
                           "files": [
                             {
                               "pattern": "target/*.jar",
-                              "target": "${ARTIFACTORY_REPO}/${APP_NAME}/"
+                              "target": "${buildp1-libs-release-local}/${petclinic}/"
                             }
                           ]
                         }
