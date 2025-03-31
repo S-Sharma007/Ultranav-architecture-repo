@@ -24,7 +24,7 @@
         
         stage('Petclinic Build with Maven') {
             steps {
-                sh 'mvn clean deploy -DskipTests=true'
+                sh 'mvn clean deploy -DskipTests=true -X'
                 
             }
         }
