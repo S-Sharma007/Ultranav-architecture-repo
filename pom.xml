@@ -281,16 +281,16 @@
 
   <distributionManagement>
     <repository>
-      <id>central</id>
-      <name>a0fg4tua327wg-artifactory-primary-0-releases</name>
-      <url>https://trialmhx67v.jfrog.io/artifactory/buildp1-libs-release-local</url>
+        <id>central</id>
+        <name>a0cjnkv616les-artifactory-primary-0-releases</name>
+        <url>https://trisha.jfrog.io/artifactory/petclinicbuild</url>
     </repository>
     <snapshotRepository>
-      <id>snapshots</id>
-      <name>a0fg4tua327wg-artifactory-primary-0-snapshots</name>
-      <url>https://trialmhx67v.jfrog.io/artifactory/buildp1-libs-snapshot-local</url>
+        <id>snapshots</id>
+        <name>a0cjnkv616les-artifactory-primary-0-snapshots</name>
+        <url>https://trisha.jfrog.io/artifactory/petclinicbuild</url>
     </snapshotRepository>
-  </distributionManagement>
+</distributionManagement>
 
   <repositories>
     <repository>
