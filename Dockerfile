@@ -16,8 +16,8 @@ ARG ARTIFACTORY_URL="https://trisha.jfrog.io/artifactory"
 ARG ARTIFACTORY_PATH="petclinicbuild/org/springframework/samples/jenkins/3.1.0-SNAPSHOT/jenkins-3.1.0-SNAPSHOT.jar"
 
 # Download JAR directly from Artifactory
-RUN curl -o app.jar ${ARTIFACTORY_URL}/${ARTIFACTORY_PATH} && chown jenkins:jenkins app.jar
-COPY --chown=jenkins:jenkins app.jar app.jar
+RUN curl -o spring-petclinic-3.1.0-SNAPSHOT.jar ${ARTIFACTORY_URL}/${ARTIFACTORY_PATH} && chown jenkins:jenkins spring-petclinic-3.1.0-SNAPSHOT.jar
+COPY --chown=jenkins:jenkins spring-petclinic-3.1.0-SNAPSHOT.jar spring-petclinic-3.1.0-SNAPSHOT.jar
 
 # Expose the application port
 EXPOSE 8081
