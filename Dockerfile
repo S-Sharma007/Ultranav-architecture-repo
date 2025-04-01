@@ -17,7 +17,6 @@ ARG ARTIFACTORY_PATH="petclinicbuild/spring-petclinic/spring-petclinic-3.1.0-SNA
 
 # Download JAR directly from Artifactory
 RUN curl -o spring-petclinic-3.1.0-SNAPSHOT.jar ${ARTIFACTORY_URL}/${ARTIFACTORY_PATH} && chown jenkins:jenkins spring-petclinic-3.1.0-SNAPSHOT.jar
-COPY --chown=jenkins:jenkins spring-petclinic-3.1.0-SNAPSHOT.jar spring-petclinic-3.1.0-SNAPSHOT.jar
 
 # Expose the application port
 EXPOSE 8081
@@ -26,4 +25,4 @@ EXPOSE 8081
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 CMD curl -f http://localhost:8081/actuator/health || exit 1
 
 # Set the entry point
-ENTRYPOINT ["java", "-jar", "petclinic.jar"]
+ENTRYPOINT ["java", "-jar", "spring-petclinic-3.1.0-SNAPSHOT.jar"]
