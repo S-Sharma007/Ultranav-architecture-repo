@@ -4,14 +4,14 @@ pipeline {
     tools {
         maven "maven"
         jdk 'jdk 17'   
-        ECR_REPO_URL = '194722422083.dkr.ecr.ap-southeast-2.amazonaws.com'
-        DOCKER_IMAGE_TAG = 'latest'
     }
     
     environment {
         Sonar_Token = credentials('SONAR_TOKEN')
         ARTIFACTORY_REPO = 'petclinicbuild/' 
         APP_NAME = 'spring-petclinic' 
+        ECR_REPO_URL = '194722422083.dkr.ecr.ap-southeast-2.amazonaws.com'
+        DOCKER_IMAGE_TAG = 'latest'
     }
     
     stages {
