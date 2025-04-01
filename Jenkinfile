@@ -4,6 +4,8 @@ pipeline {
     tools {
         maven "maven"
         jdk 'jdk 17'   
+        ECR_REPO_URL = '194722422083.dkr.ecr.ap-southeast-2.amazonaws.com'
+        DOCKER_IMAGE_TAG = 'latest'
     }
     
     environment {
@@ -59,14 +61,17 @@ pipeline {
             steps {
                 script {
                     sh "docker build -t petclinic ."
-                    sh "docker tag petclinic:latest 194722422083.dkr.ecr.ap-southeast-2.amazonaws.com/petclinic:latest"
+                    sh "docker tag petclinic:latest ${ECR_REPO_URL}/petclinic:${DOCKER_IMAGE_TAG}"
                 }
             }
         }
         
         stage('Push Docker Image to ECR') {
             steps {
-                script { 
+                    retry(3) {
+                        sh "docker push 194722422083.dkr.ecr.ap-southeast-2.amazonaws.com/petclinic:latest"
+                    }
+                    sh "docker push ${ECR_REPO_URL}/petclinic:${DOCKER_IMAGE_TAG}"
                     sh "docker push 194722422083.dkr.ecr.ap-southeast-2.amazonaws.com/petclinic:latest"
                 }
             }
