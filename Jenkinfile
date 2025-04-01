@@ -8,9 +8,8 @@ pipeline {
     
     environment {
         Sonar_Token = credentials('SONAR_TOKEN')
-        Artifacts = credentials('Jfrog-credentialv2')
-        ARTIFACTORY_REPO = 'petclinicbuild/' // Artifactory repository
-        APP_NAME = 'spring-petclinic' // Define the application name
+        ARTIFACTORY_REPO = 'petclinicbuild/' 
+        APP_NAME = 'spring-petclinic' 
     }
     
     stages {
@@ -28,18 +27,26 @@ pipeline {
             }
         }
 
+        stage('Configure Artifactory') {
+            steps {
+                rtServer (
+                    id: 'petclinicbuild',
+                    url: 'https://trisha.jfrog.io/artifactory',
+                    credentialsId: 'Jfrog-credentialv2'
+                )
+            }
+        }
+
         stage('Pushing Build to JFrog Artifactory') {
             steps {
                 rtUpload (
                     serverId: 'petclinicbuild', 
-                    credentialsId: 'Jfrog-credentialv2', 
                     spec: """
                         {
                           "files": [
                             {
-                              "File URL": "https://trisha.jfrog.io/artifactory/petclinicbuild/"
                               "pattern": "target/*.jar",
-                              "target": "${ARTIFACTORY_REPO}/${APP_NAME}/" // Use the defined environment variable
+                              "target": "${ARTIFACTORY_REPO}${APP_NAME}/"
                             }
                           ]
                         }
@@ -66,3 +73,12 @@ pipeline {
         }
     }
 }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
