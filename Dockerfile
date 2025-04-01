@@ -10,8 +10,13 @@ WORKDIR /usr/src/app
 # Switch to the non-root user
 USER jenkins
 
-# Copy the application JAR file
-COPY target/spring-petclinic-3.1.0.jar /usr/src/app/petclinic.jar
+# Use pre-built JAR from Artifactory
+ARG ARTIFACTORY_URL="https://trisha.jfrog.io/artifactory"
+ARG ARTIFACTORY_PATH="petclinicbuild/org/springframework/samples/jenkins/3.1.0-SNAPSHOT/jenkins-3.1.0-SNAPSHOT.jar"
+
+# Download JAR directly from Artifactory
+RUN curl -o app.jar ${ARTIFACTORY_URL}/${ARTIFACTORY_PATH} && chown jenkins:jenkins app.jar
+COPY --chown=jenkins:jenkins app.jar app.jar
 
 # Expose the application port
 EXPOSE 8081
