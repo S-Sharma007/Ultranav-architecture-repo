@@ -31,7 +31,8 @@ pipeline {
         stage('Pushing Build to JFrog Artifactory') {
             steps {
                 rtUpload (
-                    serverId: 'petclinicbuild',  
+                    serverId: 'petclinicbuild', 
+                    credentialsId: 'Jfrog-credentialv2', 
                     spec: """
                         {
                           "files": [
