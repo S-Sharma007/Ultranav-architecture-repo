@@ -68,18 +68,17 @@ pipeline {
         
         stage('Push Docker Image to ECR') {
             steps {
-                    retry(3) {
+                    script {
                         sh "aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 194722422083.dkr.ecr.ap-southeast-2.amazonaws.com"
+                        sh "docker build -t petclinic ."
+                        sh "docker tag petclinic:latest 194722422083.dkr.ecr.ap-southeast-2.amazonaws.com/petclinic:latest"
                         sh "docker push 194722422083.dkr.ecr.ap-southeast-2.amazonaws.com/petclinic:latest"
-                    }
-                    sh "docker push ${ECR_REPO_URL}/petclinic:${DOCKER_IMAGE_TAG}"
-                    sh "docker push 194722422083.dkr.ecr.ap-southeast-2.amazonaws.com/petclinic:latest"
                 }
             }
         }
     }
 
-
+}
     post {
         success {
             echo 'Pipeline completed successfully!'
