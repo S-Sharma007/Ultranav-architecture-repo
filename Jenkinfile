@@ -8,7 +8,7 @@ pipeline {
     
     environment {
         Sonar_Token = credentials('SONAR_TOKEN')
-        Artifacts = credentials('jfrog-jenkinsuser_creds')
+        Artifacts = credentials('Jfrog-credentialv2')
         ARTIFACTORY_REPO = 'petclinicbuild/' // Artifactory repository
         APP_NAME = 'spring-petclinic' // Define the application name
     }
