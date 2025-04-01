@@ -12,7 +12,7 @@ WORKDIR /usr/src/app
 USER jenkins
 
 # Use pre-built JAR from Artifactory
-ARG ARTIFACTORY_URL="https://trisha.jfrog.io/artifactory"
+ARG ARTIFACTORY_URL="https://trisha.jfrog.io/artifactory/petclinicbuild/spring-petclinic/spring-petclinic-3.1.0-SNAPSHOT.jar"
 ARG ARTIFACTORY_PATH="petclinicbuild/spring-petclinic/spring-petclinic-3.1.0-SNAPSHOT.jar"
 
 # Download JAR directly from Artifactory
