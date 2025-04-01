@@ -13,7 +13,7 @@ USER jenkins
 
 # Use pre-built JAR from Artifactory
 ARG ARTIFACTORY_URL="https://trisha.jfrog.io/artifactory"
-ARG ARTIFACTORY_PATH="petclinicbuild/org/springframework/samples/jenkins/3.1.0-SNAPSHOT/jenkins-3.1.0-SNAPSHOT.jar"
+ARG ARTIFACTORY_PATH="petclinicbuild/spring-petclinic/spring-petclinic-3.1.0-SNAPSHOT.jar"
 
 # Download JAR directly from Artifactory
 RUN curl -o spring-petclinic-3.1.0-SNAPSHOT.jar ${ARTIFACTORY_URL}/${ARTIFACTORY_PATH} && chown jenkins:jenkins spring-petclinic-3.1.0-SNAPSHOT.jar
