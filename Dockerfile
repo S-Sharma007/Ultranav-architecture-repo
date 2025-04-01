@@ -11,7 +11,7 @@ WORKDIR /usr/src/app
 USER jenkins
 
 # Copy the application JAR file
-COPY target/spring-petclinic-2.7.5.jar /usr/src/app/petclinic.jar
+COPY target/spring-petclinic-3.1.0.jar /usr/src/app/petclinic.jar
 
 # Expose the application port
 EXPOSE 8081
