@@ -58,7 +58,7 @@ pipeline {
         stage('Build a Docker Image') {
             steps {
                 script {
-                    sh "docker build -t petclinic ."
+                    sh "DOCKER_BUILDKIT=1 docker build -t petclinic ."
                     sh "docker tag petclinic:latest 194722422083.dkr.ecr.ap-southeast-2.amazonaws.com/petclinic:latest"
                 }
             }
