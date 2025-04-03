@@ -69,11 +69,11 @@ pipeline {
         stage('Push Docker Image to ECR') {
             steps {
                     script {
-                        sh'''
-                         "aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 194722422083.dkr.ecr.ap-southeast-2.amazonaws.com"
-                         "docker build -t petclinic ."
-                         "docker tag petclinic:latest 194722422083.dkr.ecr.ap-southeast-2.amazonaws.com/petclinic:latest"
-                         "docker push 194722422083.dkr.ecr.ap-southeast-2.amazonaws.com/petclinic:latest"
+                        sh '''
+                         aws ecr get-login-password --region ${ap-southeast-2} | docker login --username AWS --password-stdin ${194722422083.dkr.ecr.ap-southeast-2.amazonaws.com/petclinic}
+                        docker build -t petclinic .
+                        docker tag petclinic:${petclinic:latest} ${194722422083.dkr.ecr.ap-southeast-2.amazonaws.com/petclinic}/petclinic:${petclinic:latest}
+                        docker push ${194722422083.dkr.ecr.ap-southeast-2.amazonaws.com/petclinic}/petclinic:${petclinic:latest}
                          '''
 
                 }
