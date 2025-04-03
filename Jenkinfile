@@ -16,8 +16,16 @@ pipeline {
         IMAGE_NAME = 'petclinic'
         IMAGE_TAG = 'latest'
     }
-    
-     stage('SonarCloud Analysis') {
+      stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', 
+                url: 'https://github.com/S-Sharma007/Ultranav-architecture-repo.git',
+                credentialsId: 'github_creds'  
+            }
+        }
+
+        stage('SonarCloud Analysis') {
             steps {
                 script {
                     sh '''
@@ -29,15 +37,6 @@ pipeline {
                     '''
                 }
             }
-        
-      stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main', 
-                url: 'https://github.com/S-Sharma007/Ultranav-architecture-repo.git',
-                credentialsId: 'github_creds'  
-            }
-        }
         
         stage('Petclinic Build with Maven') {
             steps {
@@ -103,3 +102,4 @@ pipeline {
             echo 'Pipeline failed!'
         }
     }
+}
