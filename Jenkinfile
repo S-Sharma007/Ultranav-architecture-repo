@@ -37,6 +37,7 @@ pipeline {
                     '''
                 }
             }
+        }
         
         stage('Petclinic Build with Maven') {
             steps {
@@ -102,4 +103,3 @@ pipeline {
             echo 'Pipeline failed!'
         }
     }
-}
