@@ -29,12 +29,12 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        mvn clean verify sonar:sonar \
-                        -DskipTests=true \
-                        -Dsonar.projectKey=S-Sharma007_Ultranav-architecture-repo \
-                        -Dsonar.organization=sharmatech-key \
+                        mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+                        -Dsonar.token=$SONAR_TOKEN \
                         -Dsonar.host.url=https://sonarcloud.io \
-                        -Dsonar.login=$SONAR_TOKEN
+                        -Dsonar.organization=sharmatech-key \
+                        -Dsonar.projectKey=S-Sharma007_Ultranav-architecture-repo
+                        -DskipTests=true \
                     '''
                 }
             }
