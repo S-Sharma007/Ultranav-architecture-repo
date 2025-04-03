@@ -25,7 +25,7 @@ pipeline {
         
         stage('Petclinic Build with Maven') {
             steps {
-                 'mvn package -DskipTests=true -X' 
+                 ' mvn package -DskipTests=true -X ' 
             }
         }
 
