@@ -12,6 +12,9 @@ pipeline {
         APP_NAME = 'spring-petclinic' 
         ECR_REPO_URL = '194722422083.dkr.ecr.ap-southeast-2.amazonaws.com'
         DOCKER_IMAGE_TAG = 'latest'
+        AWS_DEFAULT_REGION = 'ap-southeast-2'
+        IMAGE_NAME = 'petclinic'
+        IMAGE_TAG = 'latest'
     }
     
     stages {
@@ -66,16 +69,13 @@ pipeline {
             }
         }
         
-        stage('Push Docker Image to ECR') {
+         stage('Push Docker Image to ECR') {
             steps {
-                    script {
-                        sh '''
-                         aws ecr get-login-password --region ${ap-southeast-2} | docker login --username AWS --password-stdin ${194722422083.dkr.ecr.ap-southeast-2.amazonaws.com/petclinic}
-                        docker build -t petclinic .
-                        docker tag petclinic:${petclinic:latest} ${194722422083.dkr.ecr.ap-southeast-2.amazonaws.com/petclinic}/petclinic:${petclinic:latest}
-                        docker push ${194722422083.dkr.ecr.ap-southeast-2.amazonaws.com/petclinic}/petclinic:${petclinic:latest}
-                         '''
-
+                script {
+                    sh """
+                        aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${ECR_REPO_URL}
+                        docker push ${ECR_REPO_URL}/${IMAGE_NAME}:${IMAGE_TAG}
+                    """
                 }
             }
         }
