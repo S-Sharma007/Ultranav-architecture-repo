@@ -17,7 +17,20 @@ pipeline {
         IMAGE_TAG = 'latest'
     }
     
-    stages {
+     stage('SonarCloud Analysis') {
+            steps {
+                script {
+                    sh '''
+                        mvn clean verify sonar:sonar \
+                        -Dsonar.projectKey=S-Sharma007_Ultranav-architecture-repo \
+                        -Dsonar.organization=sharmatech-key \
+                        -Dsonar.host.url=https://sonarcloud.io \
+                        -Dsonar.login=$SONAR_TOKEN
+                    '''
+                }
+            }
+        
+      stages {
         stage('Checkout') {
             steps {
                 git branch: 'main', 
