@@ -16,15 +16,14 @@ pipeline {
         IMAGE_NAME = 'petclinic'
         IMAGE_TAG = 'latest'
     }
-      stages {
+    
+    stages {
         stage('Checkout') {
             steps {
                 git branch: 'main',
                     url: 'https://github.com/S-Sharma007/Ultranav-architecture-repo.git'
-                
             }
         }
-     }
 
         stage('SonarCloud Analysis') {
             steps {
@@ -43,7 +42,7 @@ pipeline {
         
         stage('Petclinic Build with Maven') {
             steps {
-                  sh 'mvn package -DskipTests -DskipITs  ' 
+                sh 'mvn package -DskipTests -DskipITs'
             }
         }
 
@@ -78,13 +77,15 @@ pipeline {
         stage('Build a Docker Image') {
             steps {
                 script {
-                     "docker build -t petclinic ."
-                     "docker tag petclinic:latest ${ECR_REPO_URL}/petclinic:${DOCKER_IMAGE_TAG}"
+                    sh """
+                        docker build -t petclinic .
+                        docker tag petclinic:latest ${ECR_REPO_URL}/petclinic:${DOCKER_IMAGE_TAG}
+                    """
                 }
             }
         }
         
-         stage('Push Docker Image to ECR') {
+        stage('Push Docker Image to ECR') {
             steps {
                 script {
                     sh """
@@ -96,7 +97,6 @@ pipeline {
         }
     }
 
-
     post {
         success {
             echo 'Pipeline completed successfully!'
@@ -105,3 +105,4 @@ pipeline {
             echo 'Pipeline failed!'
         }
     }
+}
