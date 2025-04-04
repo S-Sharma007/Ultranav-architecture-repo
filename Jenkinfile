@@ -21,21 +21,21 @@ pipeline {
             steps {
                 git branch: 'main', 
                 url: 'https://github.com/S-Sharma007/Ultranav-architecture-repo.git',
-                credentialsId: 'github_creds'  
+                
             }
         }
 
         stage('SonarCloud Analysis') {
             steps {
-                withSonarQubeEnv('SonarCloud') {
-                    sh '''
+                withSonarQubeEnv('SonarCloud') { 
+                    sh """
                         mvn clean verify sonar:sonar \
                         -Dsonar.projectKey=S-Sharma007_Ultranav-architecture-repo \
                         -Dsonar.organization=sharmatech-key \
                         -Dsonar.host.url=https://sonarcloud.io \
                         -Dsonar.login=${SONAR_TOKEN} \
                         -DskipTests=true
-                    '''
+                    """
                 }
             }
         }
