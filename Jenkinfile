@@ -34,7 +34,7 @@ pipeline {
                         -Dsonar.organization=sharmatech-key \
                         -Dsonar.host.url=https://sonarcloud.io \
                         -Dsonar.login=${SONAR_TOKEN} \
-                        -DskipTests=true
+                
                     """
                 }
             }
