@@ -7,7 +7,7 @@ pipeline {
     }
     
     environment {
-        Sonar_Token = credentials('SONAR_TOKEN')
+        SONAR_TOKEN = credentials('SONAR_TOKEN')
         ARTIFACTORY_REPO = 'petclinicbuild/' 
         APP_NAME = 'spring-petclinic' 
         ECR_REPO_URL = '194722422083.dkr.ecr.ap-southeast-2.amazonaws.com'
@@ -27,14 +27,14 @@ pipeline {
 
         stage('SonarCloud Analysis') {
             steps {
-                script {
+                withSonarQubeEnv('SonarCloud') {
                     sh '''
-                        mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar 
+                        mvn clean verify sonar:sonar \
                         -Dsonar.projectKey=S-Sharma007_Ultranav-architecture-repo \
-                        -Dsonar.token=$SONAR_TOKEN \
-                        -Dsonar.host.url=https://sonarcloud.io \
                         -Dsonar.organization=sharmatech-key \
-                        -DskipTests=true 
+                        -Dsonar.host.url=https://sonarcloud.io \
+                        -Dsonar.login=${SONAR_TOKEN} \
+                        -DskipTests=true
                     '''
                 }
             }
