@@ -34,7 +34,7 @@ pipeline {
                         -Dsonar.host.url=https://sonarcloud.io \
                         -Dsonar.organization=sharmatech-key \
                         -Dsonar.projectKey=S-Sharma007_Ultranav-architecture-repo
-                        -DskipTests=true \
+                        -DskipTests=true 
                     '''
                 }
             }
@@ -42,7 +42,7 @@ pipeline {
         
         stage('Petclinic Build with Maven') {
             steps {
-                  sh 'mvn package -DskipITs -DskipTests=true -X ' 
+                  sh 'mvn package -DskipITs -DskipTests=true ' 
             }
         }
 
