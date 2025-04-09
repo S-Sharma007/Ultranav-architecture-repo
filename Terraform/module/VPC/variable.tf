@@ -12,11 +12,13 @@ variable " vpc_name" {
 variable " vpc_tags" {
     description = "Tags to apply to the VPC"
     type        = map(string)
+    default = {}
 }
 
 variable " log_format" {
     description = "Log format for flow logs"
     type        = string
+    default  = "$${version} $${account-id} $${interface-id}"
 }
 
 variable " account_id" {

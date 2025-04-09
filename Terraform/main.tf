@@ -16,31 +16,26 @@ terraform {
 }
 
 provider "aws" {
-  region = "ap-southeast-2"
+  region = var.aws_region
 }
 
-module "VPC" {
-
-  source = "./module/VPC"
-
-  vpc_cidr              = var.vpc_cidr
-  availability_zones    = var.availability_zones
-  public_subnets_cidrs  = var.public_subnets_cidrs
-  private_subnets_cidrs = var.private_subnets_cidrs
-  cluster_name          = var.cluster_name
-  vpc_name              = var.vpc_name
-  vpc_tags              = var.vpc_tags
-  log_format            = var.log_format
-  account_id            = var.account_id
-
+module "vpc" {
+  source     = "./module/VPC"
+  vpc_name   = var.vpc_name
+  vpc_cidr   = var.vpc_cidr
+  account_id = data.aws_caller_identity.current.account_id
+  vpc_tags   = {
+    Environment = var.environment
+    Project     = "petclinic"
+  }
 }
 
 module "eks" {
-  source ="./module/EKS"
-
+  source       = "./module/EKS"
   cluster_name = var.cluster_name
-  cluster_version = var.cluster_version
-    vpc_id = module.VPC.vpc_id
-    subnet_ids = module.VPC.private_subnet_ids
-    node_group_name = var.node_group_name
+  vpc_id       = module.vpc.vpc_id
+  subnet_ids   = module.vpc.private_subnet_ids
+  depends_on   = [module.vpc]
 }
+
+data "aws_caller_identity" "current" {}
