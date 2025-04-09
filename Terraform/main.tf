@@ -33,6 +33,8 @@ module "vpc" {
 module "eks" {
   source       = "./module/EKS"
   cluster_name = var.cluster_name
+  cluster_version  = var.cluster_version  
+  node_group_name  = var.node_group_name
   vpc_id       = module.vpc.vpc_id
   subnet_ids   = module.vpc.private_subnet_ids
   depends_on   = [module.vpc]

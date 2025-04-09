@@ -4,29 +4,29 @@ variable "aws_region" {
 }
 
 
-variable " vpc_name" {
+variable "vpc_name" {
     description = "AWS name of the VPC"
     type        = string
 }
 
-variable " vpc_tags" {
+variable "vpc_tags" {
     description = "Tags to apply to the VPC"
     type        = map(string)
     default = {}
 }
 
-variable " log_format" {
+variable "log_format" {
     description = "Log format for flow logs"
     type        = string
     default  = "$${version} $${account-id} $${interface-id}"
 }
 
-variable " account_id" {
+variable "account_id" {
     description = "AWS account ID"
     type        = string
 }
 
-variable " vpc_cidr" {
+variable "vpc_cidr" {
     description = "CIDR block for VPC"
     type        = string
 }

@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "ap-southeast-2"  
+  region = "ap-southeast-2"
 }
 
 resource "aws_s3_bucket" "terraform_state" {
@@ -11,13 +11,13 @@ resource "aws_s3_bucket" "terraform_state" {
   }
 }
 
-resource "aws_s3_bucket_versioning" "versioning" {
+/* resource "aws_s3_bucket_versioning" "versioning" {
   bucket = aws_s3_bucket.terraform_state.id
 
   versioning_configuration {
     status = "Enabled"
   }
-}
+}*/
 
 data "aws_s3_bucket" "check_region" {
   bucket = aws_s3_bucket.terraform_state.id
