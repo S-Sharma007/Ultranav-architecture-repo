@@ -3,22 +3,27 @@ variable "aws_region" {
     type        = string
 }
 
-
 variable "vpc_name" {
     description = "AWS name of the VPC"
     type        = string
 }
 
+variable "name" {
+    description = "Name prefix for resources"
+    type        = string
+    default     = "petclinic"
+}
+
 variable "vpc_tags" {
     description = "Tags to apply to the VPC"
     type        = map(string)
-    default = {}
+    default     = {}
 }
 
 variable "log_format" {
     description = "Log format for flow logs"
     type        = string
-    default  = "$${version} $${account-id} $${interface-id}"
+    default     = "$${version} $${account-id} $${interface-id}"
 }
 
 variable "account_id" {
@@ -36,12 +41,12 @@ variable "availability_zones" {
     type        = list(string)
 }
 
-variable "private_subnets_cidr" {
+variable "private_subnets" {
     description = "List of private subnet CIDR blocks"
     type        = list(string)
 }
 
-variable "public_subnets_cidr" {
+variable "public_subnets" {
     description = "List of public subnet CIDR blocks"
     type        = list(string)
 }

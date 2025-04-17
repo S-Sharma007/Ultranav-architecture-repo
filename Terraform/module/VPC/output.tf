@@ -17,6 +17,7 @@ output "private_subnet_ids" {
   description = "List of private subnet IDs"
   value      = aws_subnet.private[*].id
 }
+
 output "nat_gateway_id" {
   description = "NAT Gateway ID"
   value      = aws_nat_gateway.main.id
@@ -27,23 +28,14 @@ output "internet_gateway_id" {
   value      = aws_internet_gateway.main.id
 }
 
-output "route_table_id" {
-  description = "Route Table ID"
-  value      = aws_route_table.public.id
-}
-
 output "vpc_name" {
   description = "VPC Name"
   value      = aws_vpc.main.tags["Name"]
 }
+
 output "vpc_tags" {
   description = "VPC Tags"
   value      = aws_vpc.main.tags
-}
-
-output "vpc_azs" {
-  description = "Availability Zones"
-  value      = aws_vpc.main.availability_zones
 }
 
 output "vpc_dns_support" {
