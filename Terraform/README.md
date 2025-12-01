@@ -28,7 +28,7 @@ This directory houses the infrastructure-as-code used for the Ultranav architect
 
 > Keep backend state locking enabled to avoid concurrent apply conflicts.
 
-## Working With PRs and Conflict Resolution this is just doing write nwo to resove the conflict error.
+## Working With PRs and Conflict Resolution this is just doing write nwo to resove the conflict the resloving the error.
 
 - Open a unique branch per pull request. To duplicate an existing branch for a second PR, create a new branch from the same commit (e.g., `git checkout -b feature-pr-2 origin/feature-pr-1`) and push it separately.
 - When Git reports merge conflicts, run `git merge origin/main`, edit the conflicting files to remove the `<<<<<<<` markers, stage (`git add`) and continue the merge (`git merge --continue`).
