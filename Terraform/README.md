@@ -1,6 +1,12 @@
 # Terraform Directory
 
-This directory houses the infrastructure-as-code used for the Ultranav architecture. It follows a modular layout so that shared logic can be reused across environments.
+This directory houses the infrastructure-as-code for the Ultranav architecture. The goal is to keep environment provisioning consistent, auditable, and reproducible across cloud accounts and stages.
+
+## Project Overview
+
+- Declarative IaC: Terraform modules define networking, compute, and supporting services so changes are code-reviewed and versioned.
+- Remote state: Uses a shared backend with locking to prevent concurrent applies from corrupting state.
+- Modular design: Common building blocks live under `module/` and are composed by environment stacks.
 
 ## Structure
 
@@ -28,10 +34,9 @@ This directory houses the infrastructure-as-code used for the Ultranav architect
 
 > Keep backend state locking enabled to avoid concurrent apply conflicts.
 
-## Working With PRs and Conflict Resolution this is just doing write nwo to resove the conflict the resloving the error.
+## Working With PRs and Conflict Resolution
 
 - Open a unique branch per pull request. To duplicate an existing branch for a second PR, create a new branch from the same commit (e.g., `git checkout -b feature-pr-2 origin/feature-pr-1`) and push it separately.
 - When Git reports merge conflicts, run `git merge origin/main`, edit the conflicting files to remove the `<<<<<<<` markers, stage (`git add`) and continue the merge (`git merge --continue`).
 
 See your project workflow documentation for detailed Git branching guidance.
-
